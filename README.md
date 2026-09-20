@@ -142,6 +142,117 @@ regardless of how long each took. Restart `ollama serve` before a re-run to
 clear the cache.
 
 
+## How it works
+
+```mermaid
+flowchart TB
+  subgraph GT["1 · Ground truth, for free"]
+    API["ClinicalTrials.gov API v2"]
+    CRIT["eligibilityCriteria<br/><i>free text — the model sees this</i>"]
+    GOLD["minimumAge · maximumAge · sex · healthyVolunteers<br/><i>structured — the model never sees these</i>"]
+    API --> CRIT
+    API --> GOLD
+  end
+
+  CRIT --> CORPUS[("60 trials")]
+  GOLD --> CORPUS
+
+  subgraph BENCH["2 · ceb.bench — 360 calls at temperature 0"]
+    PR["3 prompts<br/>zero_shot · few_shot · decomposed"]
+    MO["2 models via Ollama<br/>llama3.2:3b · qwen2.5:3b"]
+    PARSE{"parses and fits<br/>the Pydantic schema?"}
+    EXT["extraction"]
+    VIOL["violation category<br/><i>counted as wrong, never dropped</i>"]
+    PR --> MO --> PARSE
+    PARSE -->|"yes"| EXT
+    PARSE -->|"no"| VIOL
+  end
+
+  CORPUS --> PR
+  EXT --> RAW[("results/raw.jsonl<br/>append + flush, resumable")]
+  VIOL --> RAW
+
+  BASE["2b · baselines that never call a model<br/>majority · all-null"] --> SCORE
+  RAW --> SCORE["3 · ceb.score<br/>per-field accuracy · JSON validity<br/>hallucination · miss · P50/P95<br/><b>end-to-end over every row</b>"]
+
+  SCORE --> SJ[("results/scores.json")]
+  SJ --> REP["4 · ceb.report"] --> HTML["docs/index.html<br/>leaderboard"]
+
+  AUDIT["make audit<br/><i>how often the prose supports the registry value</i><br/>not yet run — this is the ceiling on everything above"]
+  CORPUS -.-> AUDIT
+  AUDIT -.-> HTML
+```
+
+
+### Module map
+
+The same thing again as code rather than as data: which module calls
+which, and where each artefact on disk comes from.
+
+```mermaid
+flowchart TB
+  RES(["Researcher<br/>make fetch · bench · score · report · audit"])
+
+  subgraph ING["Corpus ingestion"]
+    FETCH["fetch.py<br/><i>Corpus Fetcher</i>"]
+    CORPUS[("data/corpus.jsonl<br/>criteria text + gold labels")]
+    FETCH -->|"writes"| CORPUS
+  end
+  API["ClinicalTrials.gov API v2"]
+  FETCH -->|"requests studies"| API
+
+  subgraph EXT["Model extraction"]
+    BENCH["bench.py<br/><i>Benchmark Runner</i>"]
+    PROMPTS["prompts.py<br/><i>3 templates</i>"]
+    SCHEMA["schema.py<br/><i>Pydantic, extra=forbid</i>"]
+    RUNNERS["runners.py<br/><i>Ollama adapter + healthcheck</i>"]
+    BENCH -->|"renders"| PROMPTS
+    BENCH -->|"validates against"| SCHEMA
+    BENCH -->|"invokes"| RUNNERS
+  end
+  OLLAMA["Ollama<br/>llama3.2:3b · qwen2.5:3b"]
+  RUNNERS -->|"generate, temp 0"| OLLAMA
+  HOSTED["hosted API<br/><i>adapter stub, unused</i>"]
+  RUNNERS -.->|"optional"| HOSTED
+
+  RAW[("results/raw.jsonl<br/>one line per call")]
+  CORPUS -->|"reads trials"| BENCH
+  BENCH -->|"appends, flushes"| RAW
+
+  subgraph EVAL["Evaluation"]
+    SCORE["score.py<br/><i>Metric Scorer</i>"]
+    AGE["age.py<br/><i>age unit normalizer</i>"]
+    BASE["baselines<br/><i>majority · all-null</i>"]
+    SCORE -->|"compares ages with"| AGE
+    BASE -->|"scored by the same path"| SCORE
+  end
+  RAW -->|"reads runs"| SCORE
+  CORPUS -->|"gold labels"| BASE
+  SJ[("results/scores.json")]
+  SCORE -->|"writes"| SJ
+
+  subgraph PRES["Results presentation"]
+    REPORT["report.py<br/><i>Leaderboard Renderer</i>"]
+    HTML["docs/index.html"]
+    REPORT -->|"writes"| HTML
+  end
+  SJ -->|"reads metrics"| REPORT
+
+  subgraph LQ["Label quality"]
+    AUDIT["audit.py<br/><i>Label Auditor</i>"]
+    AR[("results/audit.jsonl<br/>does the prose support the label?")]
+    AUDIT -->|"writes verdicts"| AR
+  end
+  CORPUS -->|"reads criteria"| AUDIT
+  AUDIT -.->|"ceiling on every number above<br/>not yet run"| HTML
+
+  RES --> FETCH
+  RES --> BENCH
+  RES --> SCORE
+  RES --> REPORT
+  RES --> AUDIT
+```
+
 ## Why the ground truth is free
 
 ClinicalTrials.gov stores `minimumAge`, `maximumAge`, `sex` and
