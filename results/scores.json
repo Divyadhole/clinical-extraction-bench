@@ -1,332 +1,707 @@
 [
   {
+    "model": "baseline:majority",
+    "prompt": "constant",
+    "is_baseline": true,
+    "n_examples": 60,
+    "json_validity": 1.0,
+    "json_validity_ci95": [
+      0.9398,
+      1.0
+    ],
+    "violations": {},
+    "per_field": {
+      "min_age_years": {
+        "accuracy": 0.6,
+        "ci95": [
+          0.4737,
+          0.7143
+        ],
+        "n": 60,
+        "accuracy_all": 0.6,
+        "ci95_all": [
+          0.4737,
+          0.7143
+        ],
+        "n_all": 60
+      },
+      "max_age_years": {
+        "accuracy": 0.45,
+        "ci95": [
+          0.3309,
+          0.5751
+        ],
+        "n": 60,
+        "accuracy_all": 0.45,
+        "ci95_all": [
+          0.3309,
+          0.5751
+        ],
+        "n_all": 60
+      },
+      "sex": {
+        "accuracy": 0.9167,
+        "ci95": [
+          0.8193,
+          0.9639
+        ],
+        "n": 60,
+        "accuracy_all": 0.9167,
+        "ci95_all": [
+          0.8193,
+          0.9639
+        ],
+        "n_all": 60
+      },
+      "accepts_healthy_volunteers": {
+        "accuracy": 0.7167,
+        "ci95": [
+          0.5923,
+          0.8149
+        ],
+        "n": 60,
+        "accuracy_all": 0.7167,
+        "ci95_all": [
+          0.5923,
+          0.8149
+        ],
+        "n_all": 60
+      }
+    },
+    "mean_field_accuracy": 0.6708,
+    "end_to_end_accuracy": 0.6708,
+    "end_to_end_ci95": [
+      0.6024,
+      0.7392
+    ],
+    "hallucination_rate": 0.129,
+    "hallucination_n": 31,
+    "miss_rate": 0.1579,
+    "miss_n": 209,
+    "latency_p50_s": 0.0,
+    "latency_p95_s": 0.0,
+    "completion_tokens_total": 0,
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0,
+    "constant": {
+      "min_age_years": 18.0,
+      "max_age_years": null,
+      "sex": "ALL",
+      "accepts_healthy_volunteers": false
+    }
+  },
+  {
     "model": "ollama:llama3.2:3b",
     "prompt": "decomposed",
+    "is_baseline": false,
     "n_examples": 60,
-    "json_validity": 0.0,
+    "json_validity": 0.9333,
     "json_validity_ci95": [
-      0.0,
-      0.0602
+      0.8407,
+      0.9738
     ],
     "violations": {
-      "empty_output": 60
+      "no_json_found": 4
     },
     "per_field": {
       "min_age_years": {
-        "accuracy": 0.0,
+        "accuracy": 0.5179,
         "ci95": [
-          0.0,
-          0.0
+          0.3901,
+          0.6433
         ],
-        "n": 0
+        "n": 56,
+        "accuracy_all": 0.4833,
+        "ci95_all": [
+          0.3617,
+          0.6069
+        ],
+        "n_all": 60
       },
       "max_age_years": {
-        "accuracy": 0.0,
+        "accuracy": 0.4643,
         "ci95": [
-          0.0,
-          0.0
+          0.3402,
+          0.593
         ],
-        "n": 0
+        "n": 56,
+        "accuracy_all": 0.4333,
+        "ci95_all": [
+          0.3157,
+          0.559
+        ],
+        "n_all": 60
       },
       "sex": {
-        "accuracy": 0.0,
+        "accuracy": 0.2321,
         "ci95": [
-          0.0,
-          0.0
+          0.141,
+          0.3577
         ],
-        "n": 0
+        "n": 56,
+        "accuracy_all": 0.2167,
+        "ci95_all": [
+          0.1312,
+          0.3362
+        ],
+        "n_all": 60
       },
       "accepts_healthy_volunteers": {
-        "accuracy": 0.0,
+        "accuracy": 0.6429,
         "ci95": [
-          0.0,
-          0.0
+          0.5119,
+          0.7554
         ],
-        "n": 0
+        "n": 56,
+        "accuracy_all": 0.6,
+        "ci95_all": [
+          0.4737,
+          0.7143
+        ],
+        "n_all": 60
       }
     },
-    "mean_field_accuracy": 0.0,
-    "hallucination_rate": null,
-    "miss_rate": null,
-    "latency_p50_s": null,
-    "latency_p95_s": null,
-    "completion_tokens_total": 0,
-    "transport_errors": 60,
-    "usd_per_1k_docs": 0.0
-  },
-  {
-    "model": "ollama:llama3.2:3b",
-    "prompt": "few_shot",
-    "n_examples": 60,
-    "json_validity": 0.0,
-    "json_validity_ci95": [
-      0.0,
-      0.0602
+    "mean_field_accuracy": 0.4643,
+    "end_to_end_accuracy": 0.4333,
+    "end_to_end_ci95": [
+      0.3626,
+      0.5041
     ],
-    "violations": {
-      "empty_output": 60
-    },
-    "per_field": {
-      "min_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "max_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "sex": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "accepts_healthy_volunteers": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      }
-    },
-    "mean_field_accuracy": 0.0,
-    "hallucination_rate": null,
-    "miss_rate": null,
-    "latency_p50_s": null,
-    "latency_p95_s": null,
-    "completion_tokens_total": 0,
-    "transport_errors": 60,
-    "usd_per_1k_docs": 0.0
-  },
-  {
-    "model": "ollama:llama3.2:3b",
-    "prompt": "zero_shot",
-    "n_examples": 60,
-    "json_validity": 0.0,
-    "json_validity_ci95": [
-      0.0,
-      0.0602
-    ],
-    "violations": {
-      "empty_output": 60
-    },
-    "per_field": {
-      "min_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "max_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "sex": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "accepts_healthy_volunteers": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      }
-    },
-    "mean_field_accuracy": 0.0,
-    "hallucination_rate": null,
-    "miss_rate": null,
-    "latency_p50_s": null,
-    "latency_p95_s": null,
-    "completion_tokens_total": 0,
-    "transport_errors": 60,
-    "usd_per_1k_docs": 0.0
-  },
-  {
-    "model": "ollama:qwen2.5:3b",
-    "prompt": "decomposed",
-    "n_examples": 60,
-    "json_validity": 0.0,
-    "json_validity_ci95": [
-      0.0,
-      0.0602
-    ],
-    "violations": {
-      "empty_output": 60
-    },
-    "per_field": {
-      "min_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "max_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "sex": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "accepts_healthy_volunteers": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      }
-    },
-    "mean_field_accuracy": 0.0,
-    "hallucination_rate": null,
-    "miss_rate": null,
-    "latency_p50_s": null,
-    "latency_p95_s": null,
-    "completion_tokens_total": 0,
-    "transport_errors": 60,
-    "usd_per_1k_docs": 0.0
-  },
-  {
-    "model": "ollama:qwen2.5:3b",
-    "prompt": "few_shot",
-    "n_examples": 60,
-    "json_validity": 0.0,
-    "json_validity_ci95": [
-      0.0,
-      0.0602
-    ],
-    "violations": {
-      "empty_output": 60
-    },
-    "per_field": {
-      "min_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "max_age_years": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "sex": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      },
-      "accepts_healthy_volunteers": {
-        "accuracy": 0.0,
-        "ci95": [
-          0.0,
-          0.0
-        ],
-        "n": 0
-      }
-    },
-    "mean_field_accuracy": 0.0,
-    "hallucination_rate": null,
-    "miss_rate": null,
-    "latency_p50_s": null,
-    "latency_p95_s": null,
-    "completion_tokens_total": 0,
-    "transport_errors": 60,
+    "hallucination_rate": 0.0,
+    "hallucination_n": 28,
+    "miss_rate": 0.2806,
+    "miss_n": 196,
+    "latency_p50_s": 6.382,
+    "latency_p95_s": 18.91,
+    "completion_tokens_total": 1720,
+    "transport_errors": 0,
     "usd_per_1k_docs": 0.0
   },
   {
     "model": "ollama:qwen2.5:3b",
     "prompt": "zero_shot",
+    "is_baseline": false,
     "n_examples": 60,
-    "json_validity": 0.0,
+    "json_validity": 0.9167,
     "json_validity_ci95": [
-      0.0,
-      0.0602
+      0.8193,
+      0.9639
     ],
     "violations": {
-      "empty_output": 60
+      "extra_field": 3,
+      "invalid_json": 1,
+      "schema_violation": 1
     },
     "per_field": {
       "min_age_years": {
-        "accuracy": 0.0,
+        "accuracy": 0.7636,
         "ci95": [
-          0.0,
-          0.0
+          0.6365,
+          0.8563
         ],
-        "n": 0
+        "n": 55,
+        "accuracy_all": 0.7,
+        "ci95_all": [
+          0.5749,
+          0.801
+        ],
+        "n_all": 60
       },
       "max_age_years": {
-        "accuracy": 0.0,
+        "accuracy": 0.6727,
         "ci95": [
-          0.0,
-          0.0
+          0.541,
+          0.7819
         ],
-        "n": 0
+        "n": 55,
+        "accuracy_all": 0.6167,
+        "ci95_all": [
+          0.4902,
+          0.7291
+        ],
+        "n_all": 60
+      },
+      "sex": {
+        "accuracy": 0.1455,
+        "ci95": [
+          0.0756,
+          0.2616
+        ],
+        "n": 55,
+        "accuracy_all": 0.1333,
+        "ci95_all": [
+          0.0691,
+          0.2417
+        ],
+        "n_all": 60
+      },
+      "accepts_healthy_volunteers": {
+        "accuracy": 0.2545,
+        "ci95": [
+          0.1581,
+          0.383
+        ],
+        "n": 55,
+        "accuracy_all": 0.2333,
+        "ci95_all": [
+          0.1444,
+          0.3544
+        ],
+        "n_all": 60
+      }
+    },
+    "mean_field_accuracy": 0.4591,
+    "end_to_end_accuracy": 0.4208,
+    "end_to_end_ci95": [
+      0.3587,
+      0.483
+    ],
+    "hallucination_rate": 0.0645,
+    "hallucination_n": 31,
+    "miss_rate": 0.5556,
+    "miss_n": 189,
+    "latency_p50_s": 6.594,
+    "latency_p95_s": 19.433,
+    "completion_tokens_total": 2637,
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0
+  },
+  {
+    "model": "ollama:qwen2.5:3b",
+    "prompt": "few_shot",
+    "is_baseline": false,
+    "n_examples": 60,
+    "json_validity": 1.0,
+    "json_validity_ci95": [
+      0.9398,
+      1.0
+    ],
+    "violations": {},
+    "per_field": {
+      "min_age_years": {
+        "accuracy": 0.6667,
+        "ci95": [
+          0.5406,
+          0.7727
+        ],
+        "n": 60,
+        "accuracy_all": 0.6667,
+        "ci95_all": [
+          0.5406,
+          0.7727
+        ],
+        "n_all": 60
+      },
+      "max_age_years": {
+        "accuracy": 0.6167,
+        "ci95": [
+          0.4902,
+          0.7291
+        ],
+        "n": 60,
+        "accuracy_all": 0.6167,
+        "ci95_all": [
+          0.4902,
+          0.7291
+        ],
+        "n_all": 60
+      },
+      "sex": {
+        "accuracy": 0.1667,
+        "ci95": [
+          0.0931,
+          0.2803
+        ],
+        "n": 60,
+        "accuracy_all": 0.1667,
+        "ci95_all": [
+          0.0931,
+          0.2803
+        ],
+        "n_all": 60
+      },
+      "accepts_healthy_volunteers": {
+        "accuracy": 0.0833,
+        "ci95": [
+          0.0361,
+          0.1807
+        ],
+        "n": 60,
+        "accuracy_all": 0.0833,
+        "ci95_all": [
+          0.0361,
+          0.1807
+        ],
+        "n_all": 60
+      }
+    },
+    "mean_field_accuracy": 0.3833,
+    "end_to_end_accuracy": 0.3833,
+    "end_to_end_ci95": [
+      0.3281,
+      0.4385
+    ],
+    "hallucination_rate": 0.0645,
+    "hallucination_n": 31,
+    "miss_rate": 0.6651,
+    "miss_n": 209,
+    "latency_p50_s": 6.86,
+    "latency_p95_s": 18.753,
+    "completion_tokens_total": 2308,
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0
+  },
+  {
+    "model": "ollama:qwen2.5:3b",
+    "prompt": "decomposed",
+    "is_baseline": false,
+    "n_examples": 60,
+    "json_validity": 1.0,
+    "json_validity_ci95": [
+      0.9398,
+      1.0
+    ],
+    "violations": {},
+    "per_field": {
+      "min_age_years": {
+        "accuracy": 0.5833,
+        "ci95": [
+          0.4573,
+          0.6994
+        ],
+        "n": 60,
+        "accuracy_all": 0.5833,
+        "ci95_all": [
+          0.4573,
+          0.6994
+        ],
+        "n_all": 60
+      },
+      "max_age_years": {
+        "accuracy": 0.55,
+        "ci95": [
+          0.4249,
+          0.6691
+        ],
+        "n": 60,
+        "accuracy_all": 0.55,
+        "ci95_all": [
+          0.4249,
+          0.6691
+        ],
+        "n_all": 60
+      },
+      "sex": {
+        "accuracy": 0.2333,
+        "ci95": [
+          0.1444,
+          0.3544
+        ],
+        "n": 60,
+        "accuracy_all": 0.2333,
+        "ci95_all": [
+          0.1444,
+          0.3544
+        ],
+        "n_all": 60
+      },
+      "accepts_healthy_volunteers": {
+        "accuracy": 0.0333,
+        "ci95": [
+          0.0092,
+          0.1136
+        ],
+        "n": 60,
+        "accuracy_all": 0.0333,
+        "ci95_all": [
+          0.0092,
+          0.1136
+        ],
+        "n_all": 60
+      }
+    },
+    "mean_field_accuracy": 0.35,
+    "end_to_end_accuracy": 0.35,
+    "end_to_end_ci95": [
+      0.2893,
+      0.4107
+    ],
+    "hallucination_rate": 0.0968,
+    "hallucination_n": 31,
+    "miss_rate": 0.7033,
+    "miss_n": 209,
+    "latency_p50_s": 6.588,
+    "latency_p95_s": 19.203,
+    "completion_tokens_total": 2271,
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0
+  },
+  {
+    "model": "ollama:llama3.2:3b",
+    "prompt": "few_shot",
+    "is_baseline": false,
+    "n_examples": 60,
+    "json_validity": 0.5333,
+    "json_validity_ci95": [
+      0.4089,
+      0.6537
+    ],
+    "violations": {
+      "schema_violation": 9,
+      "invalid_json": 10,
+      "no_json_found": 9
+    },
+    "per_field": {
+      "min_age_years": {
+        "accuracy": 0.2812,
+        "ci95": [
+          0.1556,
+          0.4537
+        ],
+        "n": 32,
+        "accuracy_all": 0.15,
+        "ci95_all": [
+          0.081,
+          0.2611
+        ],
+        "n_all": 60
+      },
+      "max_age_years": {
+        "accuracy": 0.5625,
+        "ci95": [
+          0.3933,
+          0.7183
+        ],
+        "n": 32,
+        "accuracy_all": 0.3,
+        "ci95_all": [
+          0.199,
+          0.4251
+        ],
+        "n_all": 60
+      },
+      "sex": {
+        "accuracy": 0.25,
+        "ci95": [
+          0.1325,
+          0.4211
+        ],
+        "n": 32,
+        "accuracy_all": 0.1333,
+        "ci95_all": [
+          0.0691,
+          0.2417
+        ],
+        "n_all": 60
+      },
+      "accepts_healthy_volunteers": {
+        "accuracy": 0.2188,
+        "ci95": [
+          0.1102,
+          0.3876
+        ],
+        "n": 32,
+        "accuracy_all": 0.1167,
+        "ci95_all": [
+          0.0577,
+          0.2218
+        ],
+        "n_all": 60
+      }
+    },
+    "mean_field_accuracy": 0.3281,
+    "end_to_end_accuracy": 0.175,
+    "end_to_end_ci95": [
+      0.1058,
+      0.2442
+    ],
+    "hallucination_rate": 0.0,
+    "hallucination_n": 13,
+    "miss_rate": 0.7391,
+    "miss_n": 115,
+    "latency_p50_s": 7.156,
+    "latency_p95_s": 36.354,
+    "completion_tokens_total": 4662,
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0
+  },
+  {
+    "model": "ollama:llama3.2:3b",
+    "prompt": "zero_shot",
+    "is_baseline": false,
+    "n_examples": 60,
+    "json_validity": 0.3333,
+    "json_validity_ci95": [
+      0.2273,
+      0.4594
+    ],
+    "violations": {
+      "schema_violation": 34,
+      "no_json_found": 6
+    },
+    "per_field": {
+      "min_age_years": {
+        "accuracy": 0.25,
+        "ci95": [
+          0.1119,
+          0.4687
+        ],
+        "n": 20,
+        "accuracy_all": 0.0833,
+        "ci95_all": [
+          0.0361,
+          0.1807
+        ],
+        "n_all": 60
+      },
+      "max_age_years": {
+        "accuracy": 0.35,
+        "ci95": [
+          0.1812,
+          0.5671
+        ],
+        "n": 20,
+        "accuracy_all": 0.1167,
+        "ci95_all": [
+          0.0577,
+          0.2218
+        ],
+        "n_all": 60
+      },
+      "sex": {
+        "accuracy": 0.7,
+        "ci95": [
+          0.481,
+          0.8545
+        ],
+        "n": 20,
+        "accuracy_all": 0.2333,
+        "ci95_all": [
+          0.1444,
+          0.3544
+        ],
+        "n_all": 60
+      },
+      "accepts_healthy_volunteers": {
+        "accuracy": 0.4,
+        "ci95": [
+          0.2188,
+          0.6134
+        ],
+        "n": 20,
+        "accuracy_all": 0.1333,
+        "ci95_all": [
+          0.0691,
+          0.2417
+        ],
+        "n_all": 60
+      }
+    },
+    "mean_field_accuracy": 0.425,
+    "end_to_end_accuracy": 0.1417,
+    "end_to_end_ci95": [
+      0.0754,
+      0.2079
+    ],
+    "hallucination_rate": 0.4,
+    "hallucination_n": 10,
+    "miss_rate": 0.4571,
+    "miss_n": 70,
+    "latency_p50_s": 9.572,
+    "latency_p95_s": 26.808,
+    "completion_tokens_total": 3044,
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0
+  },
+  {
+    "model": "baseline:all-null",
+    "prompt": "constant",
+    "is_baseline": true,
+    "n_examples": 60,
+    "json_validity": 1.0,
+    "json_validity_ci95": [
+      0.9398,
+      1.0
+    ],
+    "violations": {},
+    "per_field": {
+      "min_age_years": {
+        "accuracy": 0.0667,
+        "ci95": [
+          0.0262,
+          0.1593
+        ],
+        "n": 60,
+        "accuracy_all": 0.0667,
+        "ci95_all": [
+          0.0262,
+          0.1593
+        ],
+        "n_all": 60
+      },
+      "max_age_years": {
+        "accuracy": 0.45,
+        "ci95": [
+          0.3309,
+          0.5751
+        ],
+        "n": 60,
+        "accuracy_all": 0.45,
+        "ci95_all": [
+          0.3309,
+          0.5751
+        ],
+        "n_all": 60
       },
       "sex": {
         "accuracy": 0.0,
         "ci95": [
           0.0,
-          0.0
+          0.0602
         ],
-        "n": 0
+        "n": 60,
+        "accuracy_all": 0.0,
+        "ci95_all": [
+          0.0,
+          0.0602
+        ],
+        "n_all": 60
       },
       "accepts_healthy_volunteers": {
         "accuracy": 0.0,
         "ci95": [
           0.0,
-          0.0
+          0.0602
         ],
-        "n": 0
+        "n": 60,
+        "accuracy_all": 0.0,
+        "ci95_all": [
+          0.0,
+          0.0602
+        ],
+        "n_all": 60
       }
     },
-    "mean_field_accuracy": 0.0,
-    "hallucination_rate": null,
-    "miss_rate": null,
-    "latency_p50_s": null,
-    "latency_p95_s": null,
+    "mean_field_accuracy": 0.1292,
+    "end_to_end_accuracy": 0.1292,
+    "end_to_end_ci95": [
+      0.0933,
+      0.165
+    ],
+    "hallucination_rate": 0.0,
+    "hallucination_n": 31,
+    "miss_rate": 1.0,
+    "miss_n": 209,
+    "latency_p50_s": 0.0,
+    "latency_p95_s": 0.0,
     "completion_tokens_total": 0,
-    "transport_errors": 60,
-    "usd_per_1k_docs": 0.0
+    "transport_errors": 0,
+    "usd_per_1k_docs": 0.0,
+    "constant": {
+      "min_age_years": null,
+      "max_age_years": null,
+      "sex": null,
+      "accepts_healthy_volunteers": null
+    }
   }
 ]

@@ -24,13 +24,22 @@ th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid #e6e3
 th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: #6b6862; }
 td.num { text-align: right; font-variant-numeric: tabular-nums; }
 tr.best td { font-weight: 600; }
+tr.baseline td { background: #f2efe8; font-style: italic; }
+.callout { border-left: 3px solid #b4741f; background: #faf4e9; padding: .8rem 1rem;
+           margin: 0 0 1.5rem; font-size: 13.5px; max-width: 46rem; }
 .ci { color: #8a867e; font-size: 11.5px; }
 .wrap { overflow-x: auto; }
+td.soft { color: #8a867e; }
+td.warn { color: #9a5b12; }
+.note { font-size: 11.5px; color: #8a867e; }
 footer { margin-top: 2.5rem; color: #8a867e; font-size: 12.5px; max-width: 46rem; }
 @media (prefers-color-scheme: dark) {
   body { background: #16161a; color: #e7e5e0; }
   th, td { border-bottom-color: #2c2c33; }
-  th, p.sub, footer, .ci { color: #9a978f; }
+  th, p.sub, footer, .ci, td.soft, .note { color: #9a978f; }
+  tr.baseline td { background: #1f1f26; }
+  .callout { background: #241f16; border-left-color: #a97527; }
+  td.warn { color: #d59a4e; }
 }
 """
 
@@ -38,25 +47,59 @@ footer { margin-top: 2.5rem; color: #8a867e; font-size: 12.5px; max-width: 46rem
 def render(scores):
     generated = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     n = scores[0]["n_examples"] if scores else 0
+    nfields = len(FIELDS)
+    n4 = n * nfields
 
+    base = max((r["end_to_end_accuracy"] for r in scores if r.get("is_baseline")),
+               default=0.0)
+    top = max((r["end_to_end_accuracy"] for r in scores if not r.get("is_baseline")),
+              default=0.0)
+    callout = ""
+    if scores and top <= base:
+        callout = (f"<p class='callout'><b>No model beats the constant.</b> "
+                   f"Always answering the most common value for each field &mdash; "
+                   f"reading none of the criteria text &mdash; recovers "
+                   f"{base:.1%} of fields. The best model/prompt pair here "
+                   f"recovers {top:.1%}. On this corpus, at this model size, "
+                   f"extraction is worse than not extracting.</p>")
     head = "".join(f"<th>{html.escape(f.replace('_', ' '))}</th>" for f in FIELDS)
     rows = []
-    for i, r in enumerate(scores):
+    best_model = next((r for r in scores if not r.get("is_baseline")), None)
+    for r in scores:
+        # Per-field cells use the all-rows denominator so that they average to
+        # the end-to-end headline instead of contradicting it.
         cells = "".join(
-            f"<td class='num'>{r['per_field'][f]['accuracy']:.2f}"
-            f"<br><span class='ci'>{r['per_field'][f]['ci95'][0]:.2f}"
-            f"&ndash;{r['per_field'][f]['ci95'][1]:.2f}</span></td>"
+            f"<td class='num'>{r['per_field'][f]['accuracy_all']:.2f}"
+            f"<br><span class='ci'>{r['per_field'][f]['ci95_all'][0]:.2f}"
+            f"&ndash;{r['per_field'][f]['ci95_all'][1]:.2f}</span></td>"
             for f in FIELDS)
+
+        # A big gap means the parsed-only figure was measured on a small,
+        # self-selected slice. Mark it rather than letting it read as a score.
+        gap = r["mean_field_accuracy"] - r["end_to_end_accuracy"]
+        parsed_cls = "num warn" if gap > 0.15 else "num soft"
+        parsed_note = (f"<br><span class='note'>n={int(round(r['json_validity'] * r['n_examples']))}</span>"
+                       if gap > 0.15 else "")
+
         halluc = ("&mdash;" if r["hallucination_rate"] is None
-                  else f"{r['hallucination_rate']:.2f}")
+                  else f"{r['hallucination_rate']:.2f}"
+                       f"<br><span class='note'>n={r['hallucination_n']}</span>")
+        miss = ("&mdash;" if r["miss_rate"] is None
+                else f"{r['miss_rate']:.2f}"
+                     f"<br><span class='note'>n={r['miss_n']}</span>")
+
         rows.append(
-            f"<tr class='{'best' if i == 0 else ''}'>"
+            f"<tr class='{'baseline' if r.get('is_baseline') else ''}"
+            f"{' best' if r is best_model else ''}'>"
             f"<td>{html.escape(r['model'])}</td>"
             f"<td>{html.escape(r['prompt'])}</td>"
-            f"<td class='num'>{r['mean_field_accuracy']:.3f}</td>"
+            f"<td class='num'>{r['end_to_end_accuracy']:.3f}"
+            f"<br><span class='ci'>{r['end_to_end_ci95'][0]:.2f}"
+            f"&ndash;{r['end_to_end_ci95'][1]:.2f}</span></td>"
+            f"<td class='{parsed_cls}'>{r['mean_field_accuracy']:.3f}{parsed_note}</td>"
             f"<td class='num'>{r['json_validity']:.2f}</td>"
             f"<td class='num'>{halluc}</td>"
-            f"<td class='num'>{r['miss_rate'] if r['miss_rate'] is not None else '&mdash;'}</td>"
+            f"<td class='num'>{miss}</td>"
             f"{cells}"
             f"<td class='num'>{r['latency_p50_s']}</td>"
             f"<td class='num'>{r['latency_p95_s']}</td>"
@@ -83,13 +126,16 @@ constraints from free-text clinical trial criteria? Ground truth is the
 registry's own structured fields, which the model never sees.
 {n} trials &middot; generated {generated}.</p>
 
+{callout}
+
 <h2>Leaderboard</h2>
 <div class="wrap"><table>
 <thead><tr>
-<th>Model</th><th>Prompt</th><th>Mean acc</th><th>JSON valid</th>
+<th>Model</th><th>Prompt</th><th>End-to-end acc</th>
+<th>Acc. on parsed</th><th>JSON valid</th>
 <th>Halluc.</th><th>Miss</th>{head}<th>P50 s</th><th>P95 s</th>
 </tr></thead>
-<tbody>{''.join(rows) or "<tr><td colspan='12'>No results yet.</td></tr>"}</tbody>
+<tbody>{''.join(rows) or "<tr><td colspan='13'>No results yet.</td></tr>"}</tbody>
 </table></div>
 
 <h2>Schema violations</h2>
@@ -99,12 +145,27 @@ registry's own structured fields, which the model never sees.
 </table></div>
 
 <footer>
+<b>End-to-end accuracy</b> is the fraction of all {n} &times; {nfields} field
+values recovered, counting every field of an unparsed row as wrong. It is the
+number to plan around, and it is what this table is sorted by. Its interval is
+clustered by trial, not by field: the four fields come out of one model call
+and fail together, so treating them as {n4} independent draws would claim
+roughly twice the precision the data supports.
+<b>Accuracy on parsed</b> is the older, friendlier number &mdash; hits over the
+rows that produced valid JSON. It answers "when it answers, is it right?",
+which is useful for debugging a prompt and misleading as a ranking, because a
+model is rewarded for staying silent on the documents it finds hard. Where the
+two columns diverge sharply the parsed-only figure is highlighted along with
+the handful of rows it was actually measured on.
 <b>Hallucination rate</b> is the share of cases where the criteria text does
 not state a value and the model supplied one anyway. It is the number that
-matters most here and the one plain accuracy hides.
-<b>Miss rate</b> is the reverse: a value was stated and the model returned null.
-Intervals are Wilson 95%. With {n} examples they are wide, and no ranking
-inside an overlapping interval should be read as a real difference.
+matters most here and the one plain accuracy hides. <b>Miss rate</b> is the
+reverse: a value was stated and the model returned null. Both print their
+denominator, because those denominators are small and shrink further every
+time a model fails to parse.
+Intervals are Wilson 95% except end-to-end. With {n} examples they are wide,
+and no ranking inside an overlapping interval should be read as a real
+difference.
 Ground truth comes from registry metadata, which is itself imperfect &mdash;
 see the audit section of the README for how imperfect.
 </footer>

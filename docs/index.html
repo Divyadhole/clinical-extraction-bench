@@ -14,13 +14,22 @@ th, td { text-align: left; padding: .45rem .6rem; border-bottom: 1px solid #e6e3
 th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; color: #6b6862; }
 td.num { text-align: right; font-variant-numeric: tabular-nums; }
 tr.best td { font-weight: 600; }
+tr.baseline td { background: #f2efe8; font-style: italic; }
+.callout { border-left: 3px solid #b4741f; background: #faf4e9; padding: .8rem 1rem;
+           margin: 0 0 1.5rem; font-size: 13.5px; max-width: 46rem; }
 .ci { color: #8a867e; font-size: 11.5px; }
 .wrap { overflow-x: auto; }
+td.soft { color: #8a867e; }
+td.warn { color: #9a5b12; }
+.note { font-size: 11.5px; color: #8a867e; }
 footer { margin-top: 2.5rem; color: #8a867e; font-size: 12.5px; max-width: 46rem; }
 @media (prefers-color-scheme: dark) {
   body { background: #16161a; color: #e7e5e0; }
   th, td { border-bottom-color: #2c2c33; }
-  th, p.sub, footer, .ci { color: #9a978f; }
+  th, p.sub, footer, .ci, td.soft, .note { color: #9a978f; }
+  tr.baseline td { background: #1f1f26; }
+  .callout { background: #241f16; border-left-color: #a97527; }
+  td.warn { color: #d59a4e; }
 }
 </style></head>
 <body><main>
@@ -29,30 +38,48 @@ footer { margin-top: 2.5rem; color: #8a867e; font-size: 12.5px; max-width: 46rem
 <p class="sub">Can a small local model recover structured eligibility
 constraints from free-text clinical trial criteria? Ground truth is the
 registry's own structured fields, which the model never sees.
-60 trials &middot; generated 2026-09-16 23:28 UTC.</p>
+60 trials &middot; generated 2026-09-20 02:30 UTC.</p>
+
+<p class='callout'><b>No model beats the constant.</b> Always answering the most common value for each field &mdash; reading none of the criteria text &mdash; recovers 67.1% of fields. The best model/prompt pair here recovers 43.3%. On this corpus, at this model size, extraction is worse than not extracting.</p>
 
 <h2>Leaderboard</h2>
 <div class="wrap"><table>
 <thead><tr>
-<th>Model</th><th>Prompt</th><th>Mean acc</th><th>JSON valid</th>
+<th>Model</th><th>Prompt</th><th>End-to-end acc</th>
+<th>Acc. on parsed</th><th>JSON valid</th>
 <th>Halluc.</th><th>Miss</th><th>min age years</th><th>max age years</th><th>sex</th><th>accepts healthy volunteers</th><th>P50 s</th><th>P95 s</th>
 </tr></thead>
-<tbody><tr class='best'><td>ollama:llama3.2:3b</td><td>decomposed</td><td class='num'>0.000</td><td class='num'>0.00</td><td class='num'>&mdash;</td><td class='num'>&mdash;</td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>None</td><td class='num'>None</td></tr><tr class=''><td>ollama:llama3.2:3b</td><td>few_shot</td><td class='num'>0.000</td><td class='num'>0.00</td><td class='num'>&mdash;</td><td class='num'>&mdash;</td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>None</td><td class='num'>None</td></tr><tr class=''><td>ollama:llama3.2:3b</td><td>zero_shot</td><td class='num'>0.000</td><td class='num'>0.00</td><td class='num'>&mdash;</td><td class='num'>&mdash;</td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>None</td><td class='num'>None</td></tr><tr class=''><td>ollama:qwen2.5:3b</td><td>decomposed</td><td class='num'>0.000</td><td class='num'>0.00</td><td class='num'>&mdash;</td><td class='num'>&mdash;</td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>None</td><td class='num'>None</td></tr><tr class=''><td>ollama:qwen2.5:3b</td><td>few_shot</td><td class='num'>0.000</td><td class='num'>0.00</td><td class='num'>&mdash;</td><td class='num'>&mdash;</td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>None</td><td class='num'>None</td></tr><tr class=''><td>ollama:qwen2.5:3b</td><td>zero_shot</td><td class='num'>0.000</td><td class='num'>0.00</td><td class='num'>&mdash;</td><td class='num'>&mdash;</td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.00</span></td><td class='num'>None</td><td class='num'>None</td></tr></tbody>
+<tbody><tr class='baseline'><td>baseline:majority</td><td>constant</td><td class='num'>0.671<br><span class='ci'>0.60&ndash;0.74</span></td><td class='num soft'>0.671</td><td class='num'>1.00</td><td class='num'>0.13<br><span class='note'>n=31</span></td><td class='num'>0.16<br><span class='note'>n=209</span></td><td class='num'>0.60<br><span class='ci'>0.47&ndash;0.71</span></td><td class='num'>0.45<br><span class='ci'>0.33&ndash;0.58</span></td><td class='num'>0.92<br><span class='ci'>0.82&ndash;0.96</span></td><td class='num'>0.72<br><span class='ci'>0.59&ndash;0.81</span></td><td class='num'>0.0</td><td class='num'>0.0</td></tr><tr class=' best'><td>ollama:llama3.2:3b</td><td>decomposed</td><td class='num'>0.433<br><span class='ci'>0.36&ndash;0.50</span></td><td class='num soft'>0.464</td><td class='num'>0.93</td><td class='num'>0.00<br><span class='note'>n=28</span></td><td class='num'>0.28<br><span class='note'>n=196</span></td><td class='num'>0.48<br><span class='ci'>0.36&ndash;0.61</span></td><td class='num'>0.43<br><span class='ci'>0.32&ndash;0.56</span></td><td class='num'>0.22<br><span class='ci'>0.13&ndash;0.34</span></td><td class='num'>0.60<br><span class='ci'>0.47&ndash;0.71</span></td><td class='num'>6.382</td><td class='num'>18.91</td></tr><tr class=''><td>ollama:qwen2.5:3b</td><td>zero_shot</td><td class='num'>0.421<br><span class='ci'>0.36&ndash;0.48</span></td><td class='num soft'>0.459</td><td class='num'>0.92</td><td class='num'>0.06<br><span class='note'>n=31</span></td><td class='num'>0.56<br><span class='note'>n=189</span></td><td class='num'>0.70<br><span class='ci'>0.57&ndash;0.80</span></td><td class='num'>0.62<br><span class='ci'>0.49&ndash;0.73</span></td><td class='num'>0.13<br><span class='ci'>0.07&ndash;0.24</span></td><td class='num'>0.23<br><span class='ci'>0.14&ndash;0.35</span></td><td class='num'>6.594</td><td class='num'>19.433</td></tr><tr class=''><td>ollama:qwen2.5:3b</td><td>few_shot</td><td class='num'>0.383<br><span class='ci'>0.33&ndash;0.44</span></td><td class='num soft'>0.383</td><td class='num'>1.00</td><td class='num'>0.06<br><span class='note'>n=31</span></td><td class='num'>0.67<br><span class='note'>n=209</span></td><td class='num'>0.67<br><span class='ci'>0.54&ndash;0.77</span></td><td class='num'>0.62<br><span class='ci'>0.49&ndash;0.73</span></td><td class='num'>0.17<br><span class='ci'>0.09&ndash;0.28</span></td><td class='num'>0.08<br><span class='ci'>0.04&ndash;0.18</span></td><td class='num'>6.86</td><td class='num'>18.753</td></tr><tr class=''><td>ollama:qwen2.5:3b</td><td>decomposed</td><td class='num'>0.350<br><span class='ci'>0.29&ndash;0.41</span></td><td class='num soft'>0.350</td><td class='num'>1.00</td><td class='num'>0.10<br><span class='note'>n=31</span></td><td class='num'>0.70<br><span class='note'>n=209</span></td><td class='num'>0.58<br><span class='ci'>0.46&ndash;0.70</span></td><td class='num'>0.55<br><span class='ci'>0.42&ndash;0.67</span></td><td class='num'>0.23<br><span class='ci'>0.14&ndash;0.35</span></td><td class='num'>0.03<br><span class='ci'>0.01&ndash;0.11</span></td><td class='num'>6.588</td><td class='num'>19.203</td></tr><tr class=''><td>ollama:llama3.2:3b</td><td>few_shot</td><td class='num'>0.175<br><span class='ci'>0.11&ndash;0.24</span></td><td class='num warn'>0.328<br><span class='note'>n=32</span></td><td class='num'>0.53</td><td class='num'>0.00<br><span class='note'>n=13</span></td><td class='num'>0.74<br><span class='note'>n=115</span></td><td class='num'>0.15<br><span class='ci'>0.08&ndash;0.26</span></td><td class='num'>0.30<br><span class='ci'>0.20&ndash;0.43</span></td><td class='num'>0.13<br><span class='ci'>0.07&ndash;0.24</span></td><td class='num'>0.12<br><span class='ci'>0.06&ndash;0.22</span></td><td class='num'>7.156</td><td class='num'>36.354</td></tr><tr class=''><td>ollama:llama3.2:3b</td><td>zero_shot</td><td class='num'>0.142<br><span class='ci'>0.08&ndash;0.21</span></td><td class='num warn'>0.425<br><span class='note'>n=20</span></td><td class='num'>0.33</td><td class='num'>0.40<br><span class='note'>n=10</span></td><td class='num'>0.46<br><span class='note'>n=70</span></td><td class='num'>0.08<br><span class='ci'>0.04&ndash;0.18</span></td><td class='num'>0.12<br><span class='ci'>0.06&ndash;0.22</span></td><td class='num'>0.23<br><span class='ci'>0.14&ndash;0.35</span></td><td class='num'>0.13<br><span class='ci'>0.07&ndash;0.24</span></td><td class='num'>9.572</td><td class='num'>26.808</td></tr><tr class='baseline'><td>baseline:all-null</td><td>constant</td><td class='num'>0.129<br><span class='ci'>0.09&ndash;0.17</span></td><td class='num soft'>0.129</td><td class='num'>1.00</td><td class='num'>0.00<br><span class='note'>n=31</span></td><td class='num'>1.00<br><span class='note'>n=209</span></td><td class='num'>0.07<br><span class='ci'>0.03&ndash;0.16</span></td><td class='num'>0.45<br><span class='ci'>0.33&ndash;0.58</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.06</span></td><td class='num'>0.00<br><span class='ci'>0.00&ndash;0.06</span></td><td class='num'>0.0</td><td class='num'>0.0</td></tr></tbody>
 </table></div>
 
 <h2>Schema violations</h2>
 <div class="wrap"><table>
 <thead><tr><th>Model</th><th>Prompt</th><th>Failures</th></tr></thead>
-<tbody><tr><td>ollama:llama3.2:3b</td><td>decomposed</td><td>empty_output &times;60</td></tr><tr><td>ollama:llama3.2:3b</td><td>few_shot</td><td>empty_output &times;60</td></tr><tr><td>ollama:llama3.2:3b</td><td>zero_shot</td><td>empty_output &times;60</td></tr><tr><td>ollama:qwen2.5:3b</td><td>decomposed</td><td>empty_output &times;60</td></tr><tr><td>ollama:qwen2.5:3b</td><td>few_shot</td><td>empty_output &times;60</td></tr><tr><td>ollama:qwen2.5:3b</td><td>zero_shot</td><td>empty_output &times;60</td></tr></tbody>
+<tbody><tr><td>ollama:llama3.2:3b</td><td>decomposed</td><td>no_json_found &times;4</td></tr><tr><td>ollama:qwen2.5:3b</td><td>zero_shot</td><td>extra_field &times;3, invalid_json &times;1, schema_violation &times;1</td></tr><tr><td>ollama:llama3.2:3b</td><td>few_shot</td><td>invalid_json &times;10, schema_violation &times;9, no_json_found &times;9</td></tr><tr><td>ollama:llama3.2:3b</td><td>zero_shot</td><td>schema_violation &times;34, no_json_found &times;6</td></tr></tbody>
 </table></div>
 
 <footer>
+<b>End-to-end accuracy</b> is the fraction of all 60 &times; 4 field
+values recovered, counting every field of an unparsed row as wrong. It is the
+number to plan around, and it is what this table is sorted by. Its interval is
+clustered by trial, not by field: the four fields come out of one model call
+and fail together, so treating them as 240 independent draws would claim
+roughly twice the precision the data supports.
+<b>Accuracy on parsed</b> is the older, friendlier number &mdash; hits over the
+rows that produced valid JSON. It answers "when it answers, is it right?",
+which is useful for debugging a prompt and misleading as a ranking, because a
+model is rewarded for staying silent on the documents it finds hard. Where the
+two columns diverge sharply the parsed-only figure is highlighted along with
+the handful of rows it was actually measured on.
 <b>Hallucination rate</b> is the share of cases where the criteria text does
 not state a value and the model supplied one anyway. It is the number that
-matters most here and the one plain accuracy hides.
-<b>Miss rate</b> is the reverse: a value was stated and the model returned null.
-Intervals are Wilson 95%. With 60 examples they are wide, and no ranking
-inside an overlapping interval should be read as a real difference.
+matters most here and the one plain accuracy hides. <b>Miss rate</b> is the
+reverse: a value was stated and the model returned null. Both print their
+denominator, because those denominators are small and shrink further every
+time a model fails to parse.
+Intervals are Wilson 95% except end-to-end. With 60 examples they are wide,
+and no ranking inside an overlapping interval should be read as a real
+difference.
 Ground truth comes from registry metadata, which is itself imperfect &mdash;
 see the audit section of the README for how imperfect.
 </footer>
